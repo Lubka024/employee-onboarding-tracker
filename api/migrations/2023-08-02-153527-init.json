@@ -1,0 +1,287 @@
+{
+	"formatVersion": 4,
+	"modifications": [
+		{
+			"modification": "createEnum",
+			"enumName": "OnboardingStatus",
+			"values": [
+				"inProgress",
+				"completed"
+			]
+		},
+		{
+			"modification": "createEnum",
+			"enumName": "TaskStatus",
+			"values": [
+				"pending",
+				"completed"
+			]
+		},
+		{
+			"modification": "createEntity",
+			"entity": {
+				"name": "User",
+				"unique": [],
+				"indexes": [],
+				"primary": "id",
+				"primaryColumn": "id",
+				"tableName": "user",
+				"eventLog": {
+					"enabled": true
+				},
+				"fields": {
+					"id": {
+						"name": "id",
+						"columnName": "id",
+						"type": "Uuid",
+						"columnType": "uuid",
+						"nullable": false
+					}
+				}
+			}
+		},
+		{
+			"modification": "createEntity",
+			"entity": {
+				"name": "Task",
+				"unique": [],
+				"indexes": [],
+				"primary": "id",
+				"primaryColumn": "id",
+				"tableName": "task",
+				"eventLog": {
+					"enabled": true
+				},
+				"fields": {
+					"id": {
+						"name": "id",
+						"columnName": "id",
+						"type": "Uuid",
+						"columnType": "uuid",
+						"nullable": false
+					}
+				}
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "User",
+			"field": {
+				"name": "personId",
+				"columnName": "person_id",
+				"type": "Uuid",
+				"nullable": true,
+				"columnType": "uuid"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "User",
+			"field": {
+				"name": "name",
+				"columnName": "name",
+				"type": "String",
+				"nullable": true,
+				"columnType": "text"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "User",
+			"field": {
+				"name": "email",
+				"columnName": "email",
+				"type": "String",
+				"nullable": true,
+				"columnType": "text"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "User",
+			"field": {
+				"name": "jobTitle",
+				"columnName": "job_title",
+				"type": "String",
+				"nullable": true,
+				"columnType": "text"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "User",
+			"field": {
+				"name": "startDate",
+				"columnName": "start_date",
+				"type": "Date",
+				"nullable": true,
+				"columnType": "date"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "User",
+			"field": {
+				"name": "onboardingStatus",
+				"columnName": "onboarding_status",
+				"type": "Enum",
+				"nullable": false,
+				"columnType": "OnboardingStatus"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "Task",
+			"field": {
+				"name": "title",
+				"columnName": "title",
+				"type": "String",
+				"nullable": true,
+				"columnType": "text"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "Task",
+			"field": {
+				"name": "description",
+				"columnName": "description",
+				"type": "String",
+				"nullable": true,
+				"columnType": "text"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "Task",
+			"field": {
+				"name": "dueDate",
+				"columnName": "due_date",
+				"type": "Date",
+				"nullable": true,
+				"columnType": "date"
+			}
+		},
+		{
+			"modification": "createColumn",
+			"entityName": "Task",
+			"field": {
+				"name": "status",
+				"columnName": "status",
+				"type": "Enum",
+				"nullable": false,
+				"columnType": "TaskStatus"
+			}
+		},
+		{
+			"modification": "createRelation",
+			"entityName": "Task",
+			"owningSide": {
+				"type": "ManyHasOne",
+				"name": "employee",
+				"target": "User",
+				"inversedBy": "tasks",
+				"joiningColumn": {
+					"columnName": "employee_id",
+					"onDelete": "restrict"
+				},
+				"nullable": true
+			},
+			"inverseSide": {
+				"type": "OneHasMany",
+				"name": "tasks",
+				"target": "Task",
+				"ownedBy": "employee"
+			}
+		},
+		{
+			"modification": "createUniqueConstraint",
+			"entityName": "User",
+			"unique": {
+				"fields": [
+					"personId",
+					"email"
+				],
+				"name": "unique_User_personId_email"
+			}
+		},
+		{
+			"modification": "patchAclSchema",
+			"patch": [
+				{
+					"op": "add",
+					"path": "/roles/employee",
+					"value": {
+						"variables": {
+							"personId": {
+								"type": "predefined",
+								"value": "personID"
+							}
+						},
+						"stages": "*",
+						"entities": {
+							"User": {
+								"predicates": {
+									"predicateUseremployee ": {
+										"personId": "personId"
+									}
+								},
+								"operations": {
+									"read": {
+										"personId": "predicateUseremployee ",
+										"name": "predicateUseremployee ",
+										"email": "predicateUseremployee ",
+										"jobTitle": "predicateUseremployee ",
+										"startDate": "predicateUseremployee ",
+										"onboardingStatus": "predicateUseremployee ",
+										"tasks": "predicateUseremployee "
+									},
+									"update": {
+										"personId": "predicateUseremployee ",
+										"name": "predicateUseremployee ",
+										"email": "predicateUseremployee ",
+										"jobTitle": "predicateUseremployee ",
+										"startDate": "predicateUseremployee ",
+										"onboardingStatus": "predicateUseremployee ",
+										"tasks": "predicateUseremployee "
+									}
+								}
+							},
+							"Task": {
+								"predicates": {
+									"predicateTaskemployee ": {
+										"employee": {
+											"personId": "personId"
+										}
+									}
+								},
+								"operations": {
+									"read": {
+										"title": "predicateTaskemployee ",
+										"description": "predicateTaskemployee ",
+										"dueDate": "predicateTaskemployee ",
+										"status": "predicateTaskemployee ",
+										"employee": "predicateTaskemployee "
+									},
+									"update": {
+										"title": "predicateTaskemployee ",
+										"description": "predicateTaskemployee ",
+										"dueDate": "predicateTaskemployee ",
+										"status": "predicateTaskemployee ",
+										"employee": "predicateTaskemployee "
+									}
+								}
+							}
+						},
+						"s3": {
+							"**": {
+								"upload": true,
+								"read": true
+							}
+						}
+					}
+				}
+			]
+		}
+	]
+}
